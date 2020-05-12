@@ -9,7 +9,7 @@ class Modal extends Component {
     //Don't rerender Order summary in the popup again and again since it is not shown until clicked
     shouldComponentUpdate(nextProps, nextState) {
         //order summary only update on change in props
-        return nextProps.show !== this.props.show;
+        return nextProps.show !== this.props.show || nextProps.children !== this.props.children;
     }
 
     componentWillUpdate() {

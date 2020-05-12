@@ -18,6 +18,8 @@
 
 @media (min-width: 500px) and (min-height: 401px) {
     .Burger {
+        margin-top: 80px;
+        margin-bottom: 80px;
         width: 450px;
         height: 400px;
     }
@@ -25,6 +27,8 @@
 
 @media (min-width: 1000px) and (min-height: 700px) {
     .Burger {
+        margin-bottom: 80px;
+        margin-bottom: 80px;
         width: 700px;
         height: 600px;
     }
