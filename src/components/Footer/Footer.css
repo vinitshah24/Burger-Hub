@@ -1,11 +1,16 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@500&display=swap');
+
 .Footer {
     padding: 1px 1px;
-    background-color: rgb(83, 34, 5);
+    background-color: #212529;
     color: white;
 }
 
 .Footer p {
     text-align: center;
-    font-size: 18px;
-    font-weight: bold;
+    font-family: 'Rubik', sans-serif;
+    font-size: 20px;
+    background: -webkit-linear-gradient(pink, rgb(240, 110, 110));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }

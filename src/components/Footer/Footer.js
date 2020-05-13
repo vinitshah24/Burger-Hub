@@ -4,7 +4,7 @@ import './Footer.css';
 
 const footer = () => (
     <div className="Footer">
-        <p>© The Burger Hub</p>
+        <p>© THE BURGER HUB</p>
     </div>
 );
 

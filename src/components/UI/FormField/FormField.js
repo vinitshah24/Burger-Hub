@@ -1,6 +1,6 @@
 import React from 'react';
 
-import './Input.css';
+import './FormField.css';
 
 const formField = (props) => {
     let inputElement = null;

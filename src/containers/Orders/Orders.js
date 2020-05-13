@@ -30,7 +30,8 @@ class Orders extends Component {
 
     render() {
         return (
-            <div>
+            <div style={{marginBottom: "50px"}}>
+                <h1 style={{textAlign: "center"}}>Order Summary</h1>
                 {this.state.orders.map(order => (
                     <Order
                         key={order.id}

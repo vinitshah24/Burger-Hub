@@ -1,12 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@900&display=swap');
-
 .Toolbar {
     height: 56px;
     width: 100%;
     /*position: fixed;*/
     top: 0;
     left: 0;
-    background-color: #703B09;
+    background-color: #212529;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -15,18 +14,21 @@
     z-index: 90;
 }
 
-.LogoColor{
+.LogoColor {
     color: white;
     font-family: 'Rubik', sans-serif;
-    font-size: 20px;
+    font-size: 22px;
+    font-weight: 600;
 }
 
 .Toolbar nav {
     height: 100%;
 }
 
-.Logo {
-    height: 80%;
+.Plogo {
+    background: -webkit-linear-gradient(pink, rgb(240, 110, 110));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 @media (max-width: 499px) {
