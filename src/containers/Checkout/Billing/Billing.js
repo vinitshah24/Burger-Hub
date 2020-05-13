@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 import Button from '../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spinner';
@@ -104,8 +105,9 @@ class Billing extends Component {
             formData[formElementIdentifier] = this.state.orderForm[formElementIdentifier].value;
         }
         const order = {
-            ingredients: this.props.ingredients,
-            price: this.props.price,
+            //Getting from the redux store
+            ingredients: this.props.ings,
+            price: this.props.cost,
             orderData: formData
         }
         axios.post('/orders.json', order)
@@ -203,4 +205,12 @@ class Billing extends Component {
         );
     }
 }
-export default Billing;
+
+const mapStateToProps = state => {
+    return {
+        ings: state.ingredients,
+        cost: state.totalPrice
+    }
+};
+
+export default connect(mapStateToProps)(Billing);
