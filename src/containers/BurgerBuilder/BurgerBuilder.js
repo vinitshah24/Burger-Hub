@@ -4,11 +4,12 @@ import React, { Component } from 'react';
 import Auxilary from '../../hoc/Auxilary';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
-import Modal from '../../components/OrderPopup/Modal/Modal';
+import Modal from '../../components/UI/OrderPopup/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
-import axios from '../../axios-orders';
-import Spinner from '../../components/Spinner/Spinner';
+import Spinner from '../../components/UI/Spinner/Spinner';
 import APIErrorHandler from '../../hoc/APIErrorHandler/APIErrorHandler';
+import axios from '../../axios-orders';
+
 
 const INGREDIENT_PRICES = {
     salad: 0.5,
@@ -94,42 +95,31 @@ class BurgerBuilder extends Component {
 
     //Continue Button - Continue to checkout
     purchaseContinueHandler = () => {
-        //POST ORDER -> .json required for Firebase
-        this.setState({ loading: true });
-        const order = {
-            ingredients: this.state.ingredients,
-            price: this.state.totalPrice,
-            customer: {
-                name: 'Customer',
-                address: {
-                    street: 'Streetz',
-                    zipCode: '28109',
-                    country: 'USA'
-                },
-                email: 'test@email.com'
-            },
-            deliveryMethod: 'Express'
+        //Sending ingredients in parameter URL
+        // EX: LOCALHOST/checkout?bacon=1&cheese=2&meat=2&salad=2&price=5.3
+        const queryParams = [];
+        for (let i in this.state.ingredients) {
+            queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
         }
-        axios.post('/orders.json', order)
-            .then(response => {
-                this.setState({ loading: false, purchasing: false });
-                console.log(response);
-            })
-            .catch(error => {
-                this.setState({ loading: false, purchasing: false });
-                console.log(error);
-            });
+        queryParams.push('price=' + this.state.totalPrice);
+        //Join the array by &
+        const queryString = queryParams.join('&');
+        this.props.history.push({
+            pathname: '/checkout',
+            search: '?' + queryString
+        });
     }
 
-    //Dynamically getting the order
-    componentDidMount () {
-        axios.get( 'https://projectapi-238001.firebaseio.com/ingredients.json' )
-            .then( response => {
-                this.setState( { ingredients: response.data } );
-            } )
-            .catch( error => {
-                this.setState( { error: true } );
-            } );
+    //Dynamically getting the order - Runs after render method
+    componentDidMount() {
+        // console.log(this.props);
+        // axios.get('https://projectapi-238001.firebaseio.com/ingredients.json')
+        //     .then(response => {
+        //         this.setState({ ingredients: response.data });
+        //     })
+        //     .catch(error => {
+        //         this.setState({ error: true });
+        //     });
     }
 
 
@@ -146,11 +136,12 @@ class BurgerBuilder extends Component {
         //If ingredients throw error
         let orderSummary = null;
         let burger = this.state.error ? <p>Ingredients can't be loaded!</p> : <Spinner />;
-        
+
         //If ingredients exists
         if (this.state.ingredients) {
             burger = (
                 <Auxilary>
+                    <h1 style={{ textAlign: "center" }}>Customize Your Burger</h1>
                     <Burger ingredients={this.state.ingredients} />
                     <BuildControls
                         ingredientAdded={this.addIngredientHandler}

@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 
-import Modal from '../../components/OrderPopup/Modal/Modal';
+import Modal from '../../components/UI/OrderPopup/Modal/Modal';
 import Auxilary from '../Auxilary';
 
 //Takes Wrapper component as an input
-const withErrorHandler = (WrappedComponent, axios) => {
+const APIErrorHandler = (WrappedComponent, axios) => {
     return class extends Component {
         state = {
             error: null
         }
 
-        //Setup axios listener
-        componentWillMount() {
+        //Setup axios listener -- componentWillMount <- Depricated
+        componentDidMount() {
             // In case of success, set error to null and send the request
             this.reqInterceptor = axios.interceptors.request.use(req => {
                 this.setState({ error: null });
@@ -48,4 +48,4 @@ const withErrorHandler = (WrappedComponent, axios) => {
     }
 }
 
-export default withErrorHandler;
+export default APIErrorHandler;

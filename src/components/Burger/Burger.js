@@ -2,10 +2,9 @@ import React from 'react';
 
 import './Burger.css';
 import BurgerIngredients from './BurgerIngredients/BurgerIngredients';
-
+import Auxilary from '../../hoc/Auxilary';
 
 const burger = (props) => {
-
     // Using this will require {transformedIngredients} in return
     //Create a new array with # in the each ingredients 
     // and then using the name of ingredient as key to bind values by looping through the array.
@@ -39,16 +38,18 @@ const burger = (props) => {
     var ingredientsArrOutput = transformedIngredients();
     if (ingredientsArrOutput.length === 0) {
         transformedIngredients = () => {
-            return <p>Please start adding ingredients!</p>; 
+            return <p>Please start adding ingredients!</p>;
         }
     }
 
     return (
-        <div className='Burger'>
-            <BurgerIngredients type="bread-top" />
-            {transformedIngredients()}
-            <BurgerIngredients type="bread-bottom" />
-        </div>
+        <Auxilary>
+            <div className='Burger'>
+                <BurgerIngredients type="bread-top" />
+                {transformedIngredients()}
+                <BurgerIngredients type="bread-bottom" />
+            </div>
+        </Auxilary>
     );
 };
 

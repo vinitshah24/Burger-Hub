@@ -5,8 +5,8 @@ import NavbarItem from './NavbarItem/NavbarItem';
 
 const navbar = () => (
     <ul className="NavigationItems">
-        <NavbarItem link="/" active>Build</NavbarItem>
-        <NavbarItem link="/">Checkout</NavbarItem>
+        <NavbarItem link="/" exact>Build</NavbarItem>
+        <NavbarItem link="/orders">Orders</NavbarItem>
     </ul>
 );
 

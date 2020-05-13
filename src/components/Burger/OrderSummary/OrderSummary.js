@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 
-import './OrderSummary.css';
+import Button from '../../UI/Button/Button';
 import Auxilary from '../../../hoc/Auxilary';
 
 class OrderSummary extends Component {
-    componentWillUpdate() {
-        console.log('[OrderSummary] WillUpdate');
-    }
+    // componentWillUpdate() {
+    //     console.log('[OrderSummary] WillUpdate');
+    // }
 
     render() {
         const ingredientSummary = Object.keys(this.props.ingredients)
@@ -27,16 +27,16 @@ class OrderSummary extends Component {
                 </ul>
                 <p><strong>Total Price: ${this.props.price.toFixed(2)}</strong></p>
                 <p>Continue to Checkout?</p>
-                <button
-                    className="Button Danger"
-                    onClick={this.props.purchaseCancelled}>
+                <Button
+                    btnType="Danger"
+                    clicked={this.props.purchaseCancelled}>
                     CANCEL
-                </button>
-                <button
-                    className="Button Success"
-                    onClick={this.props.purchaseContinued}>
+                </Button>
+                <Button
+                    btnType="Success"
+                    clicked={this.props.purchaseContinued}>
                     CONTINUE
-                </button>
+                    </Button>
             </Auxilary>
         );
     }

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import './Modal.css';
-import Auxillary from '../../../hoc/Auxilary';
+import Auxillary from '../../../..//hoc/Auxilary';
 import Backdrop from '../Backdrop/Backdrop';
 
 class Modal extends Component {
@@ -12,9 +12,9 @@ class Modal extends Component {
         return nextProps.show !== this.props.show || nextProps.children !== this.props.children;
     }
 
-    componentWillUpdate() {
-        console.log('[Modal] WillUpdate');
-    }
+    // componentWillUpdate() {
+    //     console.log('[Modal] WillUpdate');
+    // }
 
     render() {
         return (
