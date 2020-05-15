@@ -31,3 +31,11 @@
     border: 1px solid #dc3545;
     margin-right: 20px;
 }
+
+.Action {
+    color: #fff;
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+    border: 1px solid #17a2b8;
+    margin-left: 80%;
+}

@@ -5,6 +5,9 @@ import Button from '../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import FormField from '../../../components/UI/FormField/FormField';
 import axios from '../../../axios-orders';
+import APIErrorHandler from '../../../hoc/APIErrorHandler/APIErrorHandler'
+import * as actions from '../../../reduxStore/actions/index';
+import { checkValidity } from '../../../shared/utility';
 
 import './Billing.css';
 
@@ -15,7 +18,7 @@ class Billing extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    placeholder: 'Your Name'
+                    placeholder: 'Name'
                 },
                 value: '',
                 validation: {
@@ -28,7 +31,7 @@ class Billing extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    placeholder: 'Street'
+                    placeholder: 'Address'
                 },
                 value: '',
                 validation: {
@@ -57,7 +60,7 @@ class Billing extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'text',
-                    placeholder: 'Country'
+                    placeholder: 'City'
                 },
                 value: '',
                 validation: {
@@ -70,7 +73,7 @@ class Billing extends Component {
                 elementType: 'input',
                 elementConfig: {
                     type: 'email',
-                    placeholder: 'Your E-Mail'
+                    placeholder: 'Email'
                 },
                 value: '',
                 validation: {
@@ -84,8 +87,8 @@ class Billing extends Component {
                 elementType: 'select',
                 elementConfig: {
                     options: [
-                        { value: 'fastest', displayValue: 'Fastest' },
-                        { value: 'cheapest', displayValue: 'Cheapest' }
+                        { value: 'fastest', displayValue: 'Home Delivery' },
+                        { value: 'cheapest', displayValue: 'Takeout' }
                     ]
                 },
                 value: '',
@@ -93,13 +96,12 @@ class Billing extends Component {
                 valid: true
             }
         },
-        formIsValid: false,
-        loading: false
+        formIsValid: false
     }
 
     orderHandler = (event) => {
         event.preventDefault();
-        this.setState({ loading: true });
+
         const formData = {};
         for (let formElementIdentifier in this.state.orderForm) {
             formData[formElementIdentifier] = this.state.orderForm[formElementIdentifier].value;
@@ -108,47 +110,11 @@ class Billing extends Component {
             //Getting from the redux store
             ingredients: this.props.ings,
             price: this.props.cost,
-            orderData: formData
+            orderData: formData,
+            userId: this.props.userId
         }
-        axios.post('/orders.json', order)
-            .then(response => {
-                this.setState({ loading: false });
-                this.props.history.push('/');
-            })
-            .catch(error => {
-                this.setState({ loading: false });
-            });
-    }
-
-    checkValidity(value, rules) {
-        let isValid = true;
-        if (!rules) {
-            return true;
-        }
-
-        if (rules.required) {
-            isValid = value.trim() !== '' && isValid;
-        }
-
-        if (rules.minLength) {
-            isValid = value.length >= rules.minLength && isValid
-        }
-
-        if (rules.maxLength) {
-            isValid = value.length <= rules.maxLength && isValid
-        }
-
-        if (rules.isEmail) {
-            const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-            isValid = pattern.test(value) && isValid
-        }
-
-        if (rules.isNumeric) {
-            const pattern = /^\d+$/;
-            isValid = pattern.test(value) && isValid
-        }
-
-        return isValid;
+        //Add token for the burger order
+        this.props.onOrderBurger(order, this.props.token);
     }
 
     inputChangedHandler = (event, inputIdentifier) => {
@@ -159,7 +125,7 @@ class Billing extends Component {
             ...updatedOrderForm[inputIdentifier]
         };
         updatedFormElement.value = event.target.value;
-        updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
+        updatedFormElement.valid = checkValidity(updatedFormElement.value, updatedFormElement.validation);
         updatedFormElement.touched = true;
         updatedOrderForm[inputIdentifier] = updatedFormElement;
 
@@ -208,9 +174,18 @@ class Billing extends Component {
 
 const mapStateToProps = state => {
     return {
-        ings: state.ingredients,
-        cost: state.totalPrice
+        ings: state.burgerBuilder.ingredients,
+        cost: state.burgerBuilder.totalPrice,
+        loading: state.order.loading,
+        token: state.auth.token,
+        userId: state.auth.userId
     }
 };
 
-export default connect(mapStateToProps)(Billing);
+const mapDispatchToProps = dispatch => {
+    return {
+        onOrderBurger: (orderData, token) => dispatch(actions.purchaseBurger(orderData, token))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(APIErrorHandler(Billing, axios));

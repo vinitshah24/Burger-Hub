@@ -19,14 +19,17 @@
     display: block;
     width: 100%;
     box-sizing: border-box;
+    border-radius: .25rem;
 }
 
 .InputElement:focus {
     outline: none;
-    background-color: #ccc;
+    box-shadow: 0 0 5px #0577f1;
+    border-radius: .25rem;
 }
 
 .Invalid {
-    border: 1px solid red;
-    background-color: #FDA49A;
+    border: 1px solid rgb(201, 12, 12);
+    background-color: rgb(255, 211, 205);
+    border-radius: .25rem;
 }

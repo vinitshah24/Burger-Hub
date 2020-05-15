@@ -11,22 +11,17 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 import APIErrorHandler from '../../hoc/APIErrorHandler/APIErrorHandler';
 import axios from '../../axios-orders';
 
-import * as actionTypes from '../../reduxStore/actions';
-
-const INGREDIENT_PRICES = {
-    salad: 0.5,
-    cheese: 0.4,
-    meat: 1.3,
-    bacon: 0.7
-};
+import * as actions from '../../reduxStore/actions/index';
 
 class BurgerBuilder extends Component {
 
     state = {
-        //Only UI state variables
         purchasing: false,
-        loading: false,
-        error: false
+    }
+
+    componentDidMount() {
+        console.log(this.props);
+        this.props.onInitIngredients();
     }
 
     updatePurchaseState(ingredients) {
@@ -42,7 +37,15 @@ class BurgerBuilder extends Component {
 
     //Open the popup and allow for purchase
     purchaseHandler = () => {
-        this.setState({ purchasing: true });
+        //If not authenticated let the popup openup
+        if (this.props.isAuthenticated) {
+            this.setState({ purchasing: true });
+        }
+        // Else rediret to the signup page
+        else {
+            this.props.onSetAuthRedirectPath('/checkout');
+            this.props.history.push('/auth');
+        }
     }
 
     //Cancel Button - Close the Modal and cancel purchase
@@ -53,6 +56,7 @@ class BurgerBuilder extends Component {
     //Continue Button - Continue to checkout
     purchaseContinueHandler = () => {
         //Checkout.js
+        this.props.onInitPurchase();
         this.props.history.push('/checkout');
     }
 
@@ -67,7 +71,7 @@ class BurgerBuilder extends Component {
 
         //If ingredients throw error
         let orderSummary = null;
-        let burger = this.state.error ? <p>Ingredients can't be loaded!</p> : <Spinner />;
+        let burger = this.props.error ? <p>Ingredients can't be loaded!</p> : <Spinner />;
 
         //If ingredients exists -> lookup in redux store
         if (this.props.ings) {
@@ -83,6 +87,9 @@ class BurgerBuilder extends Component {
                         price={this.props.price}
                         purchasable={this.updatePurchaseState(this.props.ings)}
                         ordered={this.purchaseHandler}
+                        // Check for the authentication to display controls
+                        isAuth={this.props.isAuthenticated}
+
                     />
                 </Auxilary>
             );
@@ -91,11 +98,6 @@ class BurgerBuilder extends Component {
                 price={this.props.price}
                 purchaseCancelled={this.purchaseCancelHandler}
                 purchaseContinued={this.purchaseContinueHandler} />;
-        }
-
-        //Loading Spinner
-        if (this.state.loading) {
-            orderSummary = <Spinner />;
         }
 
         return (
@@ -112,21 +114,23 @@ class BurgerBuilder extends Component {
 //Redux
 const mapStateToProps = state => {
     return {
-        ings: state.ingredients,
-        price: state.totalPrice
+        ings: state.burgerBuilder.ingredients,
+        price: state.burgerBuilder.totalPrice,
+        error: state.burgerBuilder.error,
+        // Only display the checkout- contact screen if authenticated
+        isAuthenticated: state.auth.token !== null
     };
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        onIngredientAdded: (ingName) => dispatch(
-            { type: actionTypes.ADD_INGREDIENT, ingredientName: ingName }
-        ),
-        onIngredientRemoved: (ingName) => dispatch(
-            { type: actionTypes.REMOVE_INGREDIENT, ingredientName: ingName }
-        )
+        //Dispatched from the actions/burgerBuilder
+        onIngredientAdded: (ingName) => dispatch(actions.addIngredient(ingName)),
+        onIngredientRemoved: (ingName) => dispatch(actions.removeIngredient(ingName)),
+        onInitIngredients: () => dispatch(actions.initIngredients()),
+        onInitPurchase: () => dispatch(actions.purchaseInit()),
+        onSetAuthRedirectPath: (path) => dispatch(actions.setAuthRedirectPath(path))
     }
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(APIErrorHandler(BurgerBuilder, axios));
