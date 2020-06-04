@@ -1,8 +1,8 @@
 # The Burger Hub
 ### Application built using ReactJS and Redux
 
-```npm install --save react-router-dom```
-```npm install --save redux react-redux```
+```npm install --save react-router-dom redux react-redux```
+
 #### For running async functions in redux
 ```npm install --save redux-thunk```
 
